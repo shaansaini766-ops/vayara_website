@@ -1,15 +1,22 @@
 import os
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from google import genai
 
 app = Flask(__name__)
 CORS(app)
 
-# Use environment variable for API key in production
-api_key = os.environ.get("GOOGLE_API_KEY", "AIzaSyCsNZtfWz4jIvbNPjxFSYubhaa2jI7y5ZU")
-os.environ["GOOGLE_API_KEY"] = api_key
-client = genai.Client()
+# Initialize Google AI client only when needed
+def get_ai_client():
+    try:
+        import google.generativeai as genai
+        api_key = os.environ.get("GOOGLE_API_KEY")
+        if not api_key:
+            return None
+        genai.configure(api_key=api_key)
+        return genai.GenerativeModel('gemini-pro')
+    except Exception as e:
+        print(f"AI client error: {e}")
+        return None
 
 @app.route('/')
 def index():
@@ -29,24 +36,28 @@ def about():
 
 @app.route('/ask', methods=['POST'])
 def ask_vayara():
-    data = request.json
-    user_input = data.get('question', '').strip()
-    
-    if not user_input:
-        return jsonify({'error': 'No question provided'}), 400
-    
-    if "vayara" in user_input.lower():
-        return jsonify({'response': 'Haan, main Vayara hoon, aapki smart assistant. Kaise madad kar sakti hoon?'})
-    
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=user_input,
-        )
+        data = request.json
+        user_input = data.get('question', '').strip()
+        
+        if not user_input:
+            return jsonify({'error': 'No question provided'}), 400
+        
+        if "vayara" in user_input.lower():
+            return jsonify({'response': 'Haan, main Vayara hoon, aapki smart assistant. Kaise madad kar sakti hoon?'})
+        
+        # Get AI client
+        model = get_ai_client()
+        if not model:
+            return jsonify({'response': 'AI service temporarily unavailable. Please try again later.'})
+        
+        response = model.generate_content(user_input)
         clean_response = response.text.replace('*', '')
         return jsonify({'response': clean_response})
+        
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Error in ask_vayara: {e}")
+        return jsonify({'response': 'Sorry, I encountered an error. Please try again.'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

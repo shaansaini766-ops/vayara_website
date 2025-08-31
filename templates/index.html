@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vayara AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="welcome-page">
+        <div class="welcome-content">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Vayara AI Logo" class="logo-image">
+                <h1>Vayara AI</h1>
+            </div>
+            <p>Your intelligent assistant for creativity and problem-solving</p>
+            <button class="get-started-btn" onclick="window.location.href='{{ url_for('home') }}'">Get Started</button>
+        </div>
+    </div>
+</body>
+</html>

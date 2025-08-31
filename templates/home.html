@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vayara AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="home-page">
+        <header>
+            <nav>
+                <div class="logo">Vayara AI</div>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                </ul>
+                <button class="nav-get-started" onclick="window.location.href='{{ url_for('chat') }}'">Get Started</button>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="hero-section">
+                <div class="quote-container">
+                    <h1>"The best way to predict the future is to invent it."</h1>
+                    <p>— Alan Kay</p>
+                </div>
+                
+                <div class="chat-section">
+                    <div class="chat-input-container">
+                        <input type="text" id="quickInput" placeholder="Ask Vayara anything..." class="chat-input">
+                        <button id="quickSend" class="send-btn">↑</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        document.getElementById('quickSend').addEventListener('click', function() {
+            const input = document.getElementById('quickInput').value;
+            if (input.trim()) {
+                window.location.href = `{{ url_for('chat') }}?q=${encodeURIComponent(input)}`;
+            }
+        });
+        
+        document.getElementById('quickInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('quickSend').click();
+            }
+        });
+    </script>
+</body>
+</html>
