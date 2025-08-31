@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vayara AI - Chat</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="chat-page">
+        <header>
+            <nav>
+                <div class="logo">Vayara AI</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                </ul>
+                <button class="nav-get-started">Get Started</button>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="chat-container">
+                <h1>Ask Vayara Anything</h1>
+                
+                <div class="chat-box">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="ai-message">
+                            <div class="message-bubble ai-bubble">
+                                Hello! How can I help you today?
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-section">
+                        <div class="input-container">
+                            <input type="text" id="userInput" placeholder="Type your question here..." class="chat-input">
+                            <button id="sendBtn" class="send-btn">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                addMessage('This is a demo version. For full AI functionality, use the Flask version.', 'ai');
+                input.value = '';
+            }
+        });
+        
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'user' ? 'user-message' : 'ai-message';
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = sender === 'user' ? 'message-bubble user-bubble' : 'message-bubble ai-bubble';
+            bubbleDiv.textContent = text;
+            
+            messageDiv.appendChild(bubbleDiv);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>
